@@ -26,7 +26,8 @@ app.use(rateLimiter);
 // Global response handler
 app.use(standardResponse);
 
-app.use(morgan("dev"));
+if (ENV === "development") app.use(morgan("dev"));
+
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -50,7 +51,7 @@ app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
 
 // Graceful shutdown
 process.on("SIGINT", () => {
-  console.log("Terminating Node.js process");
+  console.log("---- NODE EXITING ----: Terminating Node.js process");
   // TODO: Add cleanup logic here
   process.exit(0);
 });
