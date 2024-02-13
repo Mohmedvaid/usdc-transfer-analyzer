@@ -7,7 +7,9 @@ router.get("/", (req, res) => res.json({ message: "API is healthy" }));
 
 router.get("/fetch-usdc-transfers", async (req, res, next) => {
   try {
-    const events = await service.fetchUSDCtransfers(0, "latest");
+    const startBlock = 1000000;
+    const endBlock = 1001000;
+    const events = await service.fetchUSDCtransfers();
     return res.standardResponse(200, true, events, "Success", false);
   } catch (err) {
     return next(err);
