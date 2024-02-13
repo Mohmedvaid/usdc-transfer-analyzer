@@ -1,6 +1,6 @@
 // src/config/logger.js
 const winston = require("winston");
-const { env } = require("../config/appConfig");
+const { env } = require("./app.config");
 
 const logger = winston.createLogger({
   level: "error",

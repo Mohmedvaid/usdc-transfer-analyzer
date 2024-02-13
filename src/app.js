@@ -10,12 +10,12 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 // Local imports
-const { ENV, PORT } = require("./config/appConfig");
+const { ENV, PORT } = require("./config/app.config");
 const corsOptions = require("./config/corsOptions");
 const rateLimiter = require("./middleware/rateLimiter");
 const credentials = require("./middleware/credentials");
-const stdErr = require("./middleware/standardErr");
-const stdRes = require("./middleware/standardErr");
+const standardResponse = require("./middleware/standardRes");
+const standardError = require("./middleware/standardErr");
 const routes = require("./routes");
 
 const app = express();
@@ -24,7 +24,7 @@ const app = express();
 app.use(rateLimiter);
 
 // Global response handler
-app.use(stdRes);
+app.use(standardResponse);
 
 app.use(morgan("dev"));
 app.use(credentials);
@@ -38,7 +38,7 @@ app.get("/", (req, res) => res.json({ message: "UP" }));
 app.use("/api", routes);
 
 // Global error handler
-app.use(stdErr);
+app.use(standardError);
 
 // Start the server
 app.listen(PORT, () =>

@@ -1,5 +1,5 @@
 // backend/config/cors/allowedOrigins.js
-const { ALLOWED_ORIGINS } = require("./appConfig");
+const { ALLOWED_ORIGINS } = require("./app.config");
 const allowedOriginsString = ALLOWED_ORIGINS;
 
 if (!allowedOriginsString) {
