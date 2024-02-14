@@ -1,5 +1,5 @@
 // backend/config/cors/corsOptions.js
-const allowedOrigins = require("./allowedOrigins");
+const allowedOrigins = require("./origin.config");
 
 const corsOptions = {
   origin: (origin, callback) => {

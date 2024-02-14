@@ -1,5 +1,5 @@
 //  src/middleware/standardErr.js
-const logger = require("../config/logger");
+const logger = require("../utils/logger");
 const CustomError = require("../utils/CustomError");
 
 /**

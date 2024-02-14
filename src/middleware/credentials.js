@@ -1,5 +1,5 @@
 // src/middleware/credentials.js
-const allowedOrigins = require("../config/allowedOrigins");
+const allowedOrigins = require("../config/origin.config");
 
 const credentials = (req, res, next) => {
   const origin = req.headers.origin;
