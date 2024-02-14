@@ -2,6 +2,7 @@
 const { USDC_CONTRACT_ADDRESS } = require("../config/app.config");
 const USDC_CONTRACT_ABI = require("../config/usdc.abi.json");
 const blockchainService = require("./blockchain.service");
+const Transaction = require("../models/Transaction.model");
 
 class TransactionService {
   constructor() {
@@ -29,7 +30,6 @@ class TransactionService {
         toBlock,
       });
 
-
       events = batchEvents.map((event) => {
         const valueString = event.returnValues.value
           ? event.returnValues.value.toString()
@@ -52,6 +52,74 @@ class TransactionService {
       console.error("Error fetching USDC transfers");
       throw error;
     }
+  }
+
+  async getTopAccountsByVolume(limit = 10) {
+    const topAccounts = await Transaction.aggregate([
+      { $unwind: "$events" },
+      {
+        $group: {
+          _id: "$events.to",
+          totalValue: { $sum: "$events.value" },
+        },
+      },
+      { $sort: { totalValue: -1 } },
+      { $limit: limit },
+      {
+        $project: {
+          address: "$_id",
+          totalValue: { $toString: "$totalValue" }, // Convert Decimal128 to string
+          _id: 0,
+        },
+      },
+    ]);
+
+    return topAccounts;
+  }
+
+  async getTotalUSDCTransferred() {
+    const result = await Transaction.aggregate([
+      { $unwind: "$events" },
+      {
+        $group: {
+          _id: null,
+          totalTransferred: { $sum: "$events.value" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalTransferred: { $toString: "$totalTransferred" }, // Convert Decimal128 to string
+        },
+      },
+    ]);
+
+    // The result is an array with a single object, so we access the first element.
+    return result.length > 0 ? result[0].totalTransferred : "0";
+  }
+
+  async getUSDCTransfersInTimeRange(startTime, endTime) {
+    const transfersInRange = await Transaction.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startTime, $lte: endTime },
+        },
+      },
+      { $unwind: "$events" },
+      {
+        $project: {
+          _id: 0,
+          from: "$events.from",
+          to: "$events.to",
+          value: { $toString: "$events.value" },
+          logIndex: "$events.logIndex",
+          createdAt: "$events.createdAt",
+          updatedAt: "$events.updatedAt",
+        },
+      },
+    ]);
+
+    return transfersInRange;
   }
 }
 
