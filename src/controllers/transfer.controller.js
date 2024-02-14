@@ -2,6 +2,46 @@ const transactionService = require("../services/transfer.service");
 const isValidDateFormat = require("../utils/isValidDateFormat");
 const CustomError = require("../utils/CustomError");
 
+exports.getWallets = async (req, res, next) => {
+  try {
+    const {
+      q,
+      fromDate,
+      toDate,
+      transactionType,
+      limit = 10,
+      page = 1,
+    } = req.query;
+
+    if (fromDate && !isValidDateFormat(fromDate)) {
+      throw new CustomError("Invalid date format for fromDate", 400);
+    }
+
+    if (toDate && !isValidDateFormat(toDate)) {
+      throw new CustomError("Invalid date format for toDate", 400);
+    }
+
+    const wallets = await transactionService.getWallets({
+      q,
+      fromDate,
+      toDate,
+      transactionType,
+      limit,
+      page,
+    });
+
+    return res.standardResponse(
+      (statusCode = 200),
+      (success = true),
+      (data = wallets),
+      (message = "Success"),
+      (error = false)
+    );
+  } catch (error) {
+    return next(error);
+  }
+};
+
 /**
  * Fetches all USDC transfers
  * @param {Object} req - Request object

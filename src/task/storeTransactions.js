@@ -30,9 +30,6 @@ const storeTransactions = async () => {
       const transactionService = new TransactionService(newTransactions);
       let transactionsToSave = [];
 
-      console.log(lastSavedTransaction);
-      console.log(newTransactions[0]);
-
       const foundIdx = newTransactions.findIndex((transaction) => {
         return (
           transaction.from === lastSavedTransaction.from &&

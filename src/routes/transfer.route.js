@@ -5,7 +5,7 @@ const usdcController = require("../controllers/transfer.controller");
 const validateTransactionQuery = require("../validators/getTransfer");
 
 router.get("/", validateTransactionQuery, usdcController.transfersInTimeRange);
-router.get("/total", usdcController.totalTransferred);
+router.get("/wallets", usdcController.totalTransferred);
 router.get("/top-accounts", usdcController.topAccounts);
 
 module.exports = router;
