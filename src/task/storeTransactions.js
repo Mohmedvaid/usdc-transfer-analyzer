@@ -1,9 +1,9 @@
 // src/services/updateTransactions.service.js
-const Transaction = require("../models/transaction.model");
+const Transaction = require("../models/Transaction.model");
 const TaskTracker = require("../models/TaskTracker.model");
-const transactionService = require("./transaction.service");
+const transactionService = require("../services/transaction.service");
 
-async function updateTransactions() {
+async function storeTransactions() {
   const taskTracker = new TaskTracker({ taskName: "Update Transactions" });
   await taskTracker.save();
 
@@ -60,4 +60,4 @@ async function updateTransactions() {
   }
 }
 
-module.exports = updateTransactions;
+module.exports = storeTransactions;

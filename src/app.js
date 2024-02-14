@@ -17,8 +17,18 @@ const credentials = require("./middleware/credentials");
 const standardResponse = require("./middleware/standardRes");
 const standardError = require("./middleware/standardErr");
 const routes = require("./routes");
+const { connect, disconnect } = require("./config/db/connection");
 
 const app = express();
+
+// Connect to the database
+connect()
+  .then(console.log("Database connected"))
+  .catch((err) => {
+    console.error("Database connection error");
+    console.error(err);
+    process.exit(1);
+  });
 
 // Rate limiting
 app.use(rateLimiter);
@@ -50,8 +60,17 @@ app.listen(PORT, () =>
 app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
 
 // Graceful shutdown
-process.on("SIGINT", () => {
+process.on("SIGINT", async () => {
   console.log("---- NODE EXITING ----: Terminating Node.js process");
-  // TODO: Add cleanup logic here
+  console.log("Closing database connection");
+
+  try {
+    await disconnect();
+  } catch (err) {
+    console.error("Database disconnection error");
+    console.error(err);
+    process.exit(1);
+  }
+
   process.exit(0);
 });

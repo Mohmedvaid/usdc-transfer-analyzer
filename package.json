@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "start-dev": "nodemon --delay 2 app.js",
+    "seed-db": "node src/seeders/transactions.seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,6 +16,7 @@
     "dotenv": "^16.4.3",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
+    "mongoose": "^8.1.2",
     "morgan": "^1.10.0",
     "web3": "^4.5.0",
     "winston": "^3.11.0"

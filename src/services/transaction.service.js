@@ -29,6 +29,7 @@ class TransactionService {
         toBlock,
       });
 
+
       events = batchEvents.map((event) => {
         const valueString = event.returnValues.value
           ? event.returnValues.value.toString()
@@ -40,6 +41,9 @@ class TransactionService {
           value: usdcValue,
           blockNumber: event.blockNumber.toString(),
           transactionHash: event.transactionHash,
+          transactionIndex: event.transactionIndex.toString(),
+          blockHash: event.blockHash,
+          logIndex: event.logIndex.toString(),
         };
       });
 

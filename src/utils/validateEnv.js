@@ -11,6 +11,9 @@ const validateEnv = () => {
     "ALLOWED_ORIGINS",
     "AVALANCHE_NODE_URL",
     "USDC_CONTRACT_ADDRESS",
+    "DB_URI",
+    "RATE_LIMIT_WINDOW_MS",
+    "RATE_LIMIT_MAX_REQUESTS",
   ];
   const missingEnv = requiredEnv.filter((envVar) => !process.env[envVar]);
   if (missingEnv.length) {
