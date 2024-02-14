@@ -18,6 +18,7 @@ const standardResponse = require("./middleware/standardRes");
 const standardError = require("./middleware/standardErr");
 const routes = require("./routes");
 const { connect, disconnect } = require("./config/db/connection");
+const updateTransactions = require("./task/storeTransactions");
 
 const app = express();
 
@@ -58,6 +59,15 @@ app.listen(PORT, () =>
 
 // 404 route handler
 app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
+
+// Update transactions task
+// updateTransactions();
+
+// run task every 1 minutes
+// setInterval(() => {
+//   console.log("Running task to update transactions");
+//   updateTransactions();
+// }, 300000);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {
