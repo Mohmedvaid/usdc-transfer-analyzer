@@ -37,7 +37,7 @@ app.use(rateLimiter);
 // Global response handler
 app.use(standardResponse);
 
-if (ENV === "development") app.use(morgan("dev"));
+if (ENV === "DEVELOPMENT") app.use(morgan("dev"));
 
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -61,13 +61,13 @@ app.listen(PORT, () =>
 app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
 
 // Update transactions task
-// updateTransactions();
+updateTransactions();
 
 // run task every 1 minutes
-// setInterval(() => {
-//   console.log("Running task to update transactions");
-//   updateTransactions();
-// }, 300000);
+setInterval(() => {
+  console.log("Running task to update transactions");
+  updateTransactions();
+}, 300000);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {
