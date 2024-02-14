@@ -1,4 +1,4 @@
-const transactionService = require("../services/transaction.service");
+const transactionService = require("../services/transfer.service");
 const isValidDateFormat = require("../utils/isValidDateFormat");
 const CustomError = require("../utils/CustomError");
 

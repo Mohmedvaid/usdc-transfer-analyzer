@@ -68,10 +68,11 @@ updateTransactions();
 
 // fetch new transactions every 5 minutes
 const fiveMinutes = 300000;
+const thirtySeconds = 30000;
 setInterval(() => {
-  console.log("Running task to update transactions");
+  console.log("\n-------- Running task to update transactions --------");
   updateTransactions();
-}, fiveMinutes);
+}, thirtySeconds);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {
