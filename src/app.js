@@ -24,10 +24,9 @@ const app = express();
 
 // Connect to the database
 connect()
-  .then(console.log("Database connected"))
+  .then(() => console.log("Database connected"))
   .catch((err) => {
-    console.error("Database connection error");
-    console.error(err);
+    console.error("Database connection error", err);
     process.exit(1);
   });
 
@@ -37,10 +36,14 @@ app.use(rateLimiter);
 // Global response handler
 app.use(standardResponse);
 
-if (ENV === "DEVELOPMENT") app.use(morgan("dev"));
-
+// Middleware for CORS
 app.use(credentials);
 app.use(cors(corsOptions));
+
+if (ENV === "DEVELOPMENT") app.use(morgan("dev"));
+else app.use(morgan("combined"));
+
+// Parse incoming requests with JSON payloads
 app.use(express.json());
 
 // Health check route
@@ -60,14 +63,15 @@ app.listen(PORT, () =>
 // 404 route handler
 app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
 
-// Update transactions task
+// Update transactions task to run on server start
 updateTransactions();
 
-// run task every 1 minutes
+// fetch new transactions every 5 minutes
+const fiveMinutes = 300000;
 setInterval(() => {
   console.log("Running task to update transactions");
   updateTransactions();
-}, 300000);
+}, fiveMinutes);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {

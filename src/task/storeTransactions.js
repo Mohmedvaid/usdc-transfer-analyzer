@@ -3,7 +3,7 @@ const Transaction = require("../models/Transaction.model");
 const TaskTracker = require("../models/TaskTracker.model");
 const transactionService = require("../services/transaction.service");
 
-async function storeTransactions() {
+const storeTransactions = async () => {
   const taskTracker = new TaskTracker({ taskName: "Update Transactions" });
   await taskTracker.save();
 
@@ -58,6 +58,6 @@ async function storeTransactions() {
     taskTracker.endTime = new Date();
     await taskTracker.save();
   }
-}
+};
 
 module.exports = storeTransactions;

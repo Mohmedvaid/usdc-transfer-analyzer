@@ -4,7 +4,7 @@ const Transaction = require("../models/Transaction.model");
 const transactionService = require("../services/transaction.service");
 const { connect, disconnect } = require("../config/db/connection");
 
-async function seedTransactions() {
+const seedTransactions = async () => {
   try {
     await connect();
 
@@ -51,6 +51,6 @@ async function seedTransactions() {
   } finally {
     await disconnect();
   }
-}
+};
 
 seedTransactions();

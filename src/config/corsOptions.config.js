@@ -1,6 +1,7 @@
 // backend/config/cors/corsOptions.js
 const allowedOrigins = require("./origin.config");
 
+// CORS options - only allow requests from the allowed origins
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
