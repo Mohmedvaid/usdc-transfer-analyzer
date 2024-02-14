@@ -98,7 +98,7 @@ class TransactionService {
     return result.length > 0 ? result[0].totalTransferred : "0";
   }
 
-  async getUSDCTransfersInTimeRange(startTime, endTime) {
+  async getUSDCTransfersInTimeRange(startTime, endTime, limit, offset) {
     const transfersInRange = await Transaction.aggregate([
       {
         $match: {
@@ -117,9 +117,25 @@ class TransactionService {
           updatedAt: "$events.updatedAt",
         },
       },
+      { $skip: offset },
+      { $limit: limit },
     ]);
 
     return transfersInRange;
+  }
+
+  async countUSDCTransfersInTimeRange(startTime, endTime) {
+    const totalRecords = await Transaction.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startTime, $lte: endTime },
+        },
+      },
+      { $unwind: "$events" },
+      { $count: "total" },
+    ]);
+
+    return totalRecords.length > 0 ? totalRecords[0].total : 0;
   }
 }
 

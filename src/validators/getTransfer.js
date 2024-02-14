@@ -1,0 +1,55 @@
+const CustomError = require("../utils/CustomError");
+const isValidDateFormat = require("../utils/isValidDateFormat");
+
+/**
+ * Middleware to validate query parameters for transaction data.
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @param {Function} next - Next middleware function
+ */
+const validateTransactionQuery = (req, res, next) => {
+  let { start, end, limit = "10", page = "1" } = req.query;
+
+  // Validate the date format
+  if (start && !isValidDateFormat(start)) {
+    const example = new Date().toISOString().split(".")[0];
+    const errorMessage = `Invalid start time format. Expected format: YYYY-MM-DDTHH:mm:ss. Example: ${example}`;
+    return next(new CustomError(errorMessage, 400));
+  }
+
+  if (end && !isValidDateFormat(end)) {
+    const example = new Date().toISOString().split(".")[0];
+    const errorMessage = `Invalid end time format. Expected format: YYYY-MM-DDTHH:mm:ss. Example: ${example}`;
+    return next(new CustomError(errorMessage, 400));
+  }
+
+  // Edge case: start is required if end is provided
+  if (!start && end)
+    return next(new CustomError("Start time is required with end", 400));
+
+  // Edge case: start should not be after end
+  if (start && end) {
+    if (new Date(start) > new Date(end))
+      return next(new CustomError("Start time must be before end time", 400));
+  }
+
+  // Validate limit and page
+  limit = parseInt(limit);
+  page = parseInt(page);
+
+  if (isNaN(limit) || limit <= 0)
+    return next(new CustomError("Invalid limit value", 400));
+
+  if (isNaN(page) || page <= 0)
+    return next(new CustomError("Invalid page number", 400));
+
+  // Add validated and parsed values back to req.query
+  req.query.limit = limit;
+  req.query.page = page;
+  req.query.start = start ? new Date(start) : undefined;
+  req.query.end = end ? new Date(end) : undefined;
+
+  return next();
+};
+
+module.exports = validateTransactionQuery;

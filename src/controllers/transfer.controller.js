@@ -13,7 +13,13 @@ exports.topAccounts = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 10; // Default limit is 10
     const topAccounts = await transactionService.getTopAccountsByVolume(limit);
-    return res.standardResponse(200, true, topAccounts, "Success", false);
+    return res.standardResponse(
+      (statusCode = 200),
+      (success = true),
+      (data = topAccounts),
+      (message = "Success"),
+      (error = false)
+    );
   } catch (error) {
     return next(error);
   }
@@ -30,11 +36,11 @@ exports.totalTransferred = async (req, res, next) => {
   try {
     const totalTransferred = await transactionService.getTotalUSDCTransferred();
     return res.standardResponse(
-      200,
-      true,
-      { totalTransferred },
-      "Success",
-      false
+      (statusCode = 200),
+      (success = true),
+      (data = { totalTransferred }),
+      (message = "Success"),
+      (error = false)
     );
   } catch (error) {
     return next(error);
@@ -50,32 +56,7 @@ exports.totalTransferred = async (req, res, next) => {
  */
 exports.transfersInTimeRange = async (req, res, next) => {
   try {
-    let { start, end } = req.query;
-
-    // Validate the date format
-    if (start && !isValidDateFormat(start)) {
-      const example = new Date().toISOString().split(".")[0];
-      const errorMessage = `Invalid start time format. Expected format: YYYY-MM-DDTHH:mm:ss. Example: ${example}`;
-      return next(new CustomError(errorMessage, 400));
-    }
-
-    if (end && !isValidDateFormat(end)) {
-      const example = new Date().toISOString().split(".")[0];
-      const errorMessage = `Invalid end time format. Expected format: YYYY-MM-DDTHH:mm:ss. Example: ${example}`;
-      return next(new CustomError(errorMessage, 400));
-    }
-
-    // Edge case: start is required if end is provided
-    if (!start && end) {
-      return next(new CustomError("Start time is required with end", 400));
-    }
-
-    // Edge case: start should not be after end
-    if (start && end) {
-      if (new Date(start) > new Date(end)) {
-        return next(new CustomError("Start time must be before end time", 400));
-      }
-    }
+    let { start, end, limit = 10, page = 1 } = req.query;
 
     // Default values
     const defaultStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
@@ -85,10 +66,39 @@ exports.transfersInTimeRange = async (req, res, next) => {
     start = start ? new Date(start) : defaultStart;
     end = end ? new Date(end) : defaultEnd;
 
-    const transfersInRange =
-      await transactionService.getUSDCTransfersInTimeRange(start, end);
+    const offset = (page - 1) * limit;
 
-    return res.standardResponse(200, true, transfersInRange, "Success", false);
+    const transfersInRange =
+      await transactionService.getUSDCTransfersInTimeRange(
+        start,
+        end,
+        limit,
+        offset
+      );
+
+    const totalRecords = await transactionService.countUSDCTransfersInTimeRange(
+      start,
+      end
+    );
+    const totalPages = Math.ceil(totalRecords / limit);
+
+    const data = {
+      transfers: transfersInRange,
+      pagination: {
+        page,
+        limit,
+        totalRecords,
+        totalPages,
+      },
+    };
+
+    return res.standardResponse(
+      (statusCode = 200),
+      (success = true),
+      data,
+      (message = "Success"),
+      (error = false)
+    );
   } catch (error) {
     return next(error);
   }
