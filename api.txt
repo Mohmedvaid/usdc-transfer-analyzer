@@ -1,0 +1,53 @@
+APIs to Develop:
+
+a. Fetch Transactions:
+
+Endpoint: /api/transactions
+Method: GET
+Description: Retrieves a list of recent USDC transactions on the Avalanche blockchain.
+Query Parameters: start_date, end_date, address (optional)
+Response: A list of transactions with details like transaction ID, sender, receiver, amount, timestamp, etc.
+b. Aggregate Transactions:
+
+Endpoint: /api/transactions/aggregate
+Method: GET
+Description: Provides aggregated data over a specified period.
+Query Parameters: start_date, end_date, aggregate_type (e.g., daily, weekly)
+Response: Aggregated transaction data such as total volume, number of transactions, etc.
+c. Transaction Insights:
+
+Endpoint: /api/transactions/insights
+Method: GET
+Description: Offers insights or summaries based on USDC transaction data.
+Query Parameters: start_date, end_date
+Response: Insights like most active addresses, peak transaction times, etc.
+d. Transaction Details:
+
+Endpoint: /api/transaction/{txId}
+Method: GET
+Description: Retrieves detailed information about a specific transaction.
+Path Parameters: txId (transaction ID)
+Response: Detailed information of the transaction.
+Data to Store and Provide:
+
+Transaction ID, Sender Address, Receiver Address, Transaction Amount, Timestamp, Transaction Fee, Block Number.
+Aggregated Data: Total transaction volume, average transaction size, number of transactions per period (day/week/month).
+Analytical Insights: Active user addresses, time analysis (peak hours for transactions), transaction patterns.
+REST API Format:
+
+Use RESTful principles for clear, intuitive API design.
+Endpoints should be named logically to reflect the resources they are handling.
+Use HTTP methods appropriately (GET for fetching data, POST for creating data, PUT/PATCH for updating, DELETE for removing).
+Responses should be in JSON format.
+Implement pagination for endpoints returning large data sets.
+Ensure robust error handling and return appropriate HTTP status codes.
+Security and Performance:
+
+Implement rate limiting to prevent abuse of your API.
+Use authentication (like OAuth tokens) where necessary.
+Cache frequently accessed data to improve performance.
+Consider using a load balancer if expecting high traffic.
+Documentation:
+
+Document your API endpoints with examples and expected response formats.
+You might use tools like Swagger for API documentation.

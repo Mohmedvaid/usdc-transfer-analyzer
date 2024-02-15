@@ -1,0 +1,38 @@
+
+
+2. Initial Setup
+   - Establish connection with Avalanche blockchain using RPC node.
+
+3. Blockchain Interaction
+   - Implement functionality to query USDC transfers (ERC-20 token standard) with C-Chain.
+   - Filter and identify USDC contract addresses and transfer event signatures.
+   - Deliverable: Architecture design document & initial connection code.
+
+4. Data Aggregation & API Development
+   - Aggregate real-time USDC transfer data.
+   - Develop API endpoints for data requests (e.g., total USDC transferred, top accounts by volume).
+   - Implement robust error handling and data validation.
+   - Deliverable: Source code for aggregation & APIs, API documentation.
+
+5. Testing & Documentation
+   - Write unit tests for aggregation and API functionalities.
+   - Document the project (setup, API usage, architecture, technologies).
+   - Deliverable: Test scripts, comprehensive documentation.
+
+6. Extended Features (if time permits)
+   - Consider additional features that can enhance the project.
+
+7. Final Deliverables
+   - Complete source code for backend (and frontend, if applicable).
+   - README with setup and application running instructions.
+   - Technical documentation of architecture and design decisions.
+   - Deploy application (optional but recommended if possible).
+
+8. Submission
+   - Upload code to a private GitHub repository.
+   - Add collaborators: Lekky71, mubarakbello, lifeisgooddev, ponyjackal.
+   - Email the repository link and details to Oluwaleke.
+
+9. Time Management
+   - Deadline: One week from the email date.
+   - Plan daily goals to manage time effectively.
