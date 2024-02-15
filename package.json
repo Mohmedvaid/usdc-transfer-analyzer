@@ -7,7 +7,8 @@
     "start": "node src/app.js",
     "start-dev": "nodemon --delay 2 app.js",
     "seed-db": "node src/seeders/transactions.seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.3"
   }
 }

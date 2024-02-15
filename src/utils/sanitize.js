@@ -6,9 +6,9 @@
 const sanitize = (input) => {
   if (typeof input !== "string") return input;
 
-  // Replace potentially dangerous characters
+  // Replace potentially dangerous characters, including colon
   return input
-    .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+    .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|:]/g, "\\$&")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
