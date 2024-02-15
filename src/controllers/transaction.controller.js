@@ -72,7 +72,7 @@ exports.getById = async (req, res, next) => {
       return next(new CustomError("Invalid id", 400));
     }
     // Fetching wallet by id
-    const wallet = await Transaction.findById(req.params.id);
+    const wallet = await Transaction.findById(id);
 
     // Sending the response
     return res.standardResponse(
@@ -83,7 +83,6 @@ exports.getById = async (req, res, next) => {
       false
     );
   } catch (error) {
-    // Handling errors
     return next(error);
   }
 };

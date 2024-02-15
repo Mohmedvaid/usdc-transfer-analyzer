@@ -1,8 +1,8 @@
 // src/task/storeTransactions.js
 const Transaction = require("../models/Transaction.model");
 const TaskTracker = require("../models/TaskTracker.model");
-const transferService = require("../services/transfer.service");
 const TransactionService = require("../services/transaction.service");
+const Web3 = require("../services/web3.service");
 
 const storeTransactions = async () => {
   const taskTracker = new TaskTracker({ taskName: "Update Transactions" });
@@ -20,7 +20,7 @@ const storeTransactions = async () => {
     let isLastBlockFound = false;
 
     while (true) {
-      const newTransactions = await transferService.fetchUSDCtransfers(
+      const newTransactions = await Web3.fetchUSDCtransfers(
         currentPage,
         pageSize
       );

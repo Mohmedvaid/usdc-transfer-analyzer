@@ -1,11 +1,11 @@
 // src/services/transaction.service.js
 const { USDC_CONTRACT_ADDRESS } = require("../config/app.config");
 const USDC_CONTRACT_ABI = require("../config/usdc.abi.json");
-const blockchainService = require("./blockchain.service");
+const blockchainService = require("../config/web3.config");
 
 class TransferService {
   constructor() {
-    this.web3 = blockchainService.getWeb3Instance();
+    this.web3 = blockchainService;
     this.usdcContract = new this.web3.eth.Contract(
       USDC_CONTRACT_ABI,
       USDC_CONTRACT_ADDRESS
