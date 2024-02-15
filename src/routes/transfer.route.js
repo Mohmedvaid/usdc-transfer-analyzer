@@ -1,11 +1,10 @@
 // backend/routes/index.js
 const express = require("express");
 const router = express.Router();
-const usdcController = require("../controllers/transfer.controller");
-const validateTransactionQuery = require("../validators/get");
+const transferController = require("../controllers/transfer.controller");
+const validateGet = require("../validators/get");
 
-router.get("/", validateTransactionQuery, usdcController.transfersInTimeRange);
-router.get("/wallets", usdcController.totalTransferred);
-router.get("/top-accounts", usdcController.topAccounts);
+router.get("/", validateGet, transferController.get);
+router.get("/:id", transferController.getById);
 
 module.exports = router;
