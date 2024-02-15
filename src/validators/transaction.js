@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const CustomError = require("../utils/CustomError");
 const isValidDateFormat = require("../utils/isValidDateFormat");
 const isValidAddress = require("../utils/isValidAddress");
+const isValidMongooseId = require("../utils/isValidMongooseId");
 
 /**
  * Middleware to validate query parameters for get data.
