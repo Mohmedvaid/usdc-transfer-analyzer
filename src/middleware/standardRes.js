@@ -1,10 +1,11 @@
 // src/middleware/standardRes.js
 
 /**
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- * @returns {Function} - Standardized response function
+ * Middleware to standardize the response format
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Express.NextFunction}
  */
 
 const standardizeResponse = (req, res, next) => {
@@ -22,10 +23,10 @@ const standardizeResponse = (req, res, next) => {
       error: error,
     };
 
-    res.status(statusCode).json(response);
+    return res.status(statusCode).json(response);
   };
 
-  next();
+  return next();
 };
 
 module.exports = standardizeResponse;

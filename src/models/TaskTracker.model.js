@@ -1,4 +1,4 @@
-// src/models/taskTracker.model.js
+// src/models/TaskTracker.model.js
 const mongoose = require("mongoose");
 
 const taskTrackerSchema = new mongoose.Schema({

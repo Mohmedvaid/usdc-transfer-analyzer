@@ -64,15 +64,15 @@ app.listen(PORT, () =>
 app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
 
 // Update transactions task to run on server start
-// updateTransactions();
+updateTransactions();
 
 // fetch new transactions every 5 minutes
-// const fiveMinutes = 300000;
+const fiveMinutes = 300000;
 // const thirtySeconds = 30000;
-// setInterval(() => {
-//   console.log("\n-------- Running task to update transactions --------");
-//   updateTransactions();
-// }, thirtySeconds);
+setInterval(() => {
+  console.log("\n-------- Running task to update transactions --------");
+  updateTransactions();
+}, fiveMinutes);
 
 // Graceful shutdown
 process.on("SIGINT", async () => {

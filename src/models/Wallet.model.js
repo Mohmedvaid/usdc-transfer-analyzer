@@ -1,3 +1,4 @@
+// src/models/Wallet.model.js
 const mongoose = require("mongoose");
 const Decimal128 = mongoose.Types.Decimal128;
 

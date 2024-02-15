@@ -1,4 +1,4 @@
-// src/config/appConfig.js
+// src/config/app.config.js
 
 // Centralized configuration for the application
 module.exports = {

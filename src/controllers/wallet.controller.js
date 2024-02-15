@@ -1,8 +1,15 @@
+// src/controllers/wallet.controller.js
 const Wallet = require("../models/Wallet.model");
-const mongoose = require("mongoose");
 const isValidMongooseId = require("../utils/isValidMongooseId");
 const CustomError = require("../utils/CustomError");
 
+/**
+ * Function to get wallets with pagination and filters.
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Promise<void>}
+ */
 exports.get = async (req, res, next) => {
   try {
     let {
@@ -71,6 +78,13 @@ exports.get = async (req, res, next) => {
   }
 };
 
+/**
+ * Function to get wallet by id.
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Promise<void>}
+ */
 exports.getById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -96,6 +110,13 @@ exports.getById = async (req, res, next) => {
   }
 };
 
+/**
+ * Function to get wallet by address.
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Promise<void>}
+ */
 exports.getByAddress = async (req, res, next) => {
   try {
     const { address } = req.params;

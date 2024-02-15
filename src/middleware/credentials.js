@@ -3,10 +3,10 @@ const allowedOrigins = require("../config/origin.config");
 
 /**
  * Middleware to check if the request origin is allowed
- * @param {Object} req - Request object
- * @param {Object} res - Response object
- * @param {Function} next - Next function
- * @returns {Function} - Next function
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Express.NextFunction}
  */
 const credentials = (req, res, next) => {
   const origin = req.headers.origin;

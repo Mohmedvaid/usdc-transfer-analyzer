@@ -3,6 +3,9 @@ const { USDC_CONTRACT_ADDRESS } = require("../config/app.config");
 const USDC_CONTRACT_ABI = require("../config/usdc.abi.json");
 const blockchainService = require("../config/web3.config");
 
+/**
+ * Service class for handling USDC token transfers on the blockchain.
+ */
 class TransferService {
   constructor() {
     this.web3 = blockchainService;
@@ -12,6 +15,12 @@ class TransferService {
     );
   }
 
+  /**
+   * Fetches USDC transfers from the blockchain.
+   * @param {number} [pageNumber=1] - The page number for pagination.
+   * @param {number} [pageSize=100] - The number of records per page. Max 2000.
+   * @returns {Promise<Array>} A promise that resolves with an array of transfer events.
+   */
   async fetchUSDCtransfers(pageNumber = 1, pageSize = 100) {
     let events = [];
     try {

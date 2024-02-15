@@ -2,6 +2,9 @@
 const winston = require("winston");
 const { env } = require("../config/app.config");
 
+/**
+ * A logger for logging errors.
+ */
 const logger = winston.createLogger({
   level: "error",
   format: winston.format.combine(

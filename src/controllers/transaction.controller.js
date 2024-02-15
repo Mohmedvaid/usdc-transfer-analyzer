@@ -1,33 +1,34 @@
+// src/controllers/transaction.controller.js
 const Transaction = require("../models/Transaction.model");
-const mongoose = require("mongoose");
 const isValidMongooseId = require("../utils/isValidMongooseId");
 const CustomError = require("../utils/CustomError");
 
+/**
+ * Function to get transactions with pagination and filters.
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Promise<void>}
+ */
 exports.get = async (req, res, next) => {
   try {
     // Destructuring with default values for pagination
     let { start, end, limit, page, min, max, from, to } = req.query;
 
-    // Parsing limit and page to ensure they are integers
-    limit = parseInt(limit);
-    page = Math.max(1, parseInt(page)); // Page should be at least 1
-
     // Building the date range filter
     let dateFilter = {};
-    if (start) dateFilter["$gte"] = new Date(start);
-    if (end) dateFilter["$lte"] = new Date(end);
+    if (start) dateFilter["$gte"] = start;
+    if (end) dateFilter["$lte"] = end;
 
     // Building the query object
     let query = {};
-    if (start || end) {
-      query.createdAt = dateFilter;
-    }
+    if (start || end) query.createdAt = dateFilter;
 
     // Adding filters for totalTransferred
     if (min || max) {
       query.value = {};
-      if (min) query.value["$gte"] = mongoose.Types.Decimal128.fromString(min);
-      if (max) query.value["$lte"] = mongoose.Types.Decimal128.fromString(max);
+      if (min) query.value["$gte"] = min;
+      if (max) query.value["$lte"] = max;
     }
 
     if (from) query.from = from;
@@ -39,6 +40,7 @@ exports.get = async (req, res, next) => {
     // Fetching wallets and total count
     const [transactions, total] = await Promise.all([
       Transaction.find(query).skip(skip).limit(limit),
+      Transaction.countDocuments(query),
     ]);
 
     // Calculating the number of pages
@@ -53,34 +55,39 @@ exports.get = async (req, res, next) => {
 
     // Sending the response
     return res.standardResponse(
-      200,
-      true,
-      { transactions, pagination },
-      "Transactions retrieved successfully",
-      false
+      (statusCode = 200),
+      (success = true),
+      (data = { transactions, pagination }),
+      (message = "Transactions retrieved successfully"),
+      (error = false)
     );
   } catch (error) {
     return next(error);
   }
 };
 
+/**
+ * Function to get transaction by id.
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Promise<void>}
+ */
 exports.getById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // if not id, or string or not a valid mongoose id return error
-    if (!id || typeof id !== "string" || !isValidMongooseId(id)) {
+    if (!id || typeof id !== "string" || !isValidMongooseId(id))
       return next(new CustomError("Invalid id", 400));
-    }
-    // Fetching wallet by id
+
     const wallet = await Transaction.findById(id);
 
     // Sending the response
     return res.standardResponse(
-      200,
-      true,
-      wallet,
-      "Wallet retrieved successfully",
-      false
+      (statusCode = 200),
+      (success = true),
+      (data = wallet),
+      (message = "Transaction retrieved successfully"),
+      (error = false)
     );
   } catch (error) {
     return next(error);

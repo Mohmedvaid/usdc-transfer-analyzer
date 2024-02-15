@@ -1,4 +1,4 @@
-// backend/config/cors/allowedOrigins.js
+// src/config/origin.config.js
 const { ALLOWED_ORIGINS } = require("./app.config");
 const allowedOriginsString = ALLOWED_ORIGINS;
 

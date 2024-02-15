@@ -1,4 +1,4 @@
-// backend/config/cors/corsOptions.js
+// src/config/corsOptions.config.js
 const allowedOrigins = require("./origin.config");
 
 // CORS options - only allow requests from the allowed origins

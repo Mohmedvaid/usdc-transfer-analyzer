@@ -4,11 +4,11 @@ const CustomError = require("../utils/CustomError");
 
 /**
  * Global error handler middleware
- * @param {Object} err
- * @param {Object} req
- * @param {Object} res
- * @param {Function} next
- * @returns {Function} - Standardized response function
+ * @param {Error} err - Error object
+ * @param {Express.Request} req - Request object
+ * @param {Express.Response} res - Response object
+ * @param {Express.NextFunction} next - Next middleware function
+ * @returns {Express.Response}
  */
 const errorHandler = (err, req, res, next) => {
   // Log the error for server side tracking
@@ -18,15 +18,21 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof CustomError) {
     const code = err.statusCode || 500;
     const message = err.message || "An error occurred.";
-    return res.standardResponse(code, false, null, message, true);
+    return res.standardResponse(
+      (statusCode = code),
+      (success = false),
+      (data = null),
+      (message = message),
+      (error = true)
+    );
   }
 
   return res.standardResponse(
-    500,
-    false,
-    null,
-    "An internal server error occurred.",
-    true
+    (statusCode = 500),
+    (success = false),
+    (data = null),
+    (message = "An internal error occurred."),
+    (error = true)
   );
 };
 

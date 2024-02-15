@@ -5,8 +5,6 @@ const validator = require("web3-validator");
  * @param {String} address - Ethereum address
  * @returns {Boolean} - True if valid, false otherwise
  */
-const isValidAddress = (address) => {
-  return validator.isAddress(address);
-};
+const isValidAddress = (address) => validator.isAddress(address);
 
 module.exports = isValidAddress;

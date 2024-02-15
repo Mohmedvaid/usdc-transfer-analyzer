@@ -4,6 +4,11 @@ const TaskTracker = require("../models/TaskTracker.model");
 const TransactionService = require("../services/transaction.service");
 const Web3 = require("../services/web3.service");
 
+/**
+ * Stores transactions in the database.
+ * @returns {Promise<void>} A promise that resolves when the transactions are stored.
+ * @async
+ */
 const storeTransactions = async () => {
   const taskTracker = new TaskTracker({ taskName: "Update Transactions" });
   await taskTracker.save();

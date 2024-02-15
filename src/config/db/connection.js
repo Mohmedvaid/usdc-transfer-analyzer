@@ -1,3 +1,4 @@
+// src/config/db/connection.js
 const mongoose = require("mongoose");
 const { DB_URI: APP_DB_URI } = require("../app.config");
 

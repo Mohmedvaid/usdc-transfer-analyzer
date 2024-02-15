@@ -1,3 +1,4 @@
+// src/config/web3.config.js
 const { Web3 } = require("web3");
 const { AVALANCHE_NODE_URL } = require("./app.config");
 

@@ -1,6 +1,6 @@
+const mongoose = require("mongoose");
 const CustomError = require("../utils/CustomError");
 const isValidDateFormat = require("../utils/isValidDateFormat");
-// const sanitize = require("../utils/sanitize");
 const isValidAddress = require("../utils/isValidAddress");
 
 /**
@@ -62,6 +62,8 @@ const validateGet = (req, res, next) => {
   req.query.page = page;
   req.query.start = start ? new Date(start) : undefined;
   req.query.end = end ? new Date(end) : undefined;
+  req.query.min = min ? mongoose.Types.Decimal128.fromString(min) : undefined;
+  req.query.max = max ? mongoose.Types.Decimal128.fromString(max) : undefined;
 
   return next();
 };
@@ -69,10 +71,8 @@ const validateGet = (req, res, next) => {
 const validateGetById = (req, res, next) => {
   const { id } = req.params;
 
-  // if not id, or string or not a valid mongoose id return error
-  if (!id || typeof id !== "string" || !isValidMongooseId(id)) {
+  if (!id || typeof id !== "string" || !isValidMongooseId(id))
     return next(new CustomError("Invalid id", 400));
-  }
 
   return next();
 };
