@@ -2,12 +2,12 @@ const CustomError = require("../utils/CustomError");
 const isValidDateFormat = require("../utils/isValidDateFormat");
 
 /**
- * Middleware to validate query parameters for transaction data.
+ * Middleware to validate query parameters for get data.
  * @param {Object} req - Request object
  * @param {Object} res - Response object
  * @param {Function} next - Next middleware function
  */
-const validateTransactionQuery = (req, res, next) => {
+const validateGet = (req, res, next) => {
   let { start, end, limit = "10", page = "1" } = req.query;
 
   // Validate the date format
@@ -52,4 +52,4 @@ const validateTransactionQuery = (req, res, next) => {
   return next();
 };
 
-module.exports = validateTransactionQuery;
+module.exports = validateGet;

@@ -8,8 +8,6 @@ const transactionSchema = new mongoose.Schema(
   },
   {
     _id: false,
-    timestamps: true,
-    autoCreate: true,
     versionKey: false,
   }
 );
@@ -25,6 +23,22 @@ const walletSchema = new mongoose.Schema(
   {
     timestamps: true,
     autoCreate: true,
+    versionKey: false,
+    toJSON: {
+      // convert Decimal128 to string
+      transform: function (doc, ret) {
+        if (ret.totalTransferred) {
+          ret.totalTransferred = ret.totalTransferred.toString();
+        }
+        if (ret.totalReceived) {
+          ret.totalReceived = ret.totalReceived.toString();
+        }
+
+        // remove createdAt and updatedAt
+        delete ret.createdAt;
+        delete ret.updatedAt;
+      },
+    },
   }
 );
 

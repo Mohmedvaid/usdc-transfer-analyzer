@@ -52,38 +52,8 @@ class TransactionService {
       );
     }
 
-    wallet.transactions.push({ id: transactionId, type: type });
+    wallet.transactions.push({ transactionId, type: type });
     await wallet.save();
-  }
-
-  async getWallets({
-    q,
-    fromDate,
-    toDate,
-    transactionType,
-    limit = 10,
-    page = 1,
-  }) {
-    const query = {};
-    if (q) {
-      query.address = q;
-    }
-
-    if (fromDate || toDate) {
-      query["transactions.createdAt"] = {};
-      if (fromDate) query["transactions.createdAt"].$gte = new Date(fromDate);
-      if (toDate) query["transactions.createdAt"].$lte = new Date(toDate);
-    }
-
-    if (transactionType) {
-      query["transactions.type"] = transactionType;
-    }
-
-    const wallets = await Wallet.find(query)
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    return wallets;
   }
 }
 

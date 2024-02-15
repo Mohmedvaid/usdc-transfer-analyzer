@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const usdcController = require("../controllers/transfer.controller");
-const validateTransactionQuery = require("../validators/getTransfer");
+const validateTransactionQuery = require("../validators/get");
 
 router.get("/", validateTransactionQuery, usdcController.transfersInTimeRange);
 router.get("/wallets", usdcController.totalTransferred);

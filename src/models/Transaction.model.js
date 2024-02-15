@@ -14,6 +14,16 @@ const transactionSchema = new mongoose.Schema(
   {
     timestamps: true,
     autoCreate: true,
+    versionKey: false,
+    toJSON: {
+      transform: function (doc, ret) {
+        ret.value = ret.value.toString();
+
+        // remove createdAt and updatedAt
+        delete ret.createdAt;
+        delete ret.updatedAt;
+      },
+    },
   }
 );
 
