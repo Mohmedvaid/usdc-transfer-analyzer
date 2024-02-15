@@ -1,5 +1,7 @@
+const mongoose = require("mongoose");
 const CustomError = require("../utils/CustomError");
 const isValidDateFormat = require("../utils/isValidDateFormat");
+const isValidMongooseId = require("../utils/isValidMongooseId");
 // const sanitize = require("../utils/sanitize");
 const isValidAddress = require("../utils/isValidAddress");
 
@@ -10,7 +12,16 @@ const isValidAddress = require("../utils/isValidAddress");
  * @param {Function} next - Next middleware function
  */
 const validateGet = (req, res, next) => {
-  let { start, end, min, max, from, to, limit = "10", page = "1" } = req.query;
+  let {
+    start,
+    end,
+    mintransferred,
+    maxtransferred,
+    minreceived,
+    maxreceived,
+    limit = "10",
+    page = "1",
+  } = req.query;
 
   // Validate the date format
   if (start && !isValidDateFormat(start)) {
@@ -26,16 +37,17 @@ const validateGet = (req, res, next) => {
   }
 
   // Validate min and max numbers
-  if (min && isNaN(min)) return next(new CustomError("Invalid min value", 400));
+  if (mintransferred && isNaN(mintransferred))
+    return next(new CustomError("Invalid mintransferred value", 400));
 
-  if (max && isNaN(max)) return next(new CustomError("Invalid max value", 400));
+  if (maxtransferred && isNaN(maxtransferred))
+    return next(new CustomError("Invalid maxtransferred value", 400));
 
-  // Validate addresses
-  if (from && !isValidAddress(from))
-    return next(new CustomError("Invalid from address", 400));
+  if (minreceived && isNaN(minreceived))
+    return next(new CustomError("Invalid minreceived value", 400));
 
-  if (to && !isValidAddress(to))
-    return next(new CustomError("Invalid to address", 400));
+  if (maxreceived && isNaN(maxreceived))
+    return next(new CustomError("Invalid maxreceived value", 400));
 
   // Edge case: start is required if end is provided
   if (!start && end)
@@ -62,6 +74,18 @@ const validateGet = (req, res, next) => {
   req.query.page = page;
   req.query.start = start ? new Date(start) : undefined;
   req.query.end = end ? new Date(end) : undefined;
+  req.query.mintransferred = mintransferred
+    ? mongoose.Types.Decimal128.fromString(mintransferred)
+    : undefined;
+  req.query.maxtransferred = maxtransferred
+    ? mongoose.Types.Decimal128.fromString(maxtransferred)
+    : undefined;
+  req.query.minreceived = minreceived
+    ? mongoose.Types.Decimal128.fromString(minreceived)
+    : undefined;
+  req.query.maxreceived = maxreceived
+    ? mongoose.Types.Decimal128.fromString(maxreceived)
+    : undefined;
 
   return next();
 };
@@ -77,4 +101,15 @@ const validateGetById = (req, res, next) => {
   return next();
 };
 
-module.exports = { validateGet, validateGetById };
+const validateGetByAddress = (req, res, next) => {
+  const { address } = req.params;
+
+  // if not address, or string return error
+  if (!address || typeof address !== "string" || !isValidAddress(address)) {
+    return next(new CustomError("Invalid address", 400));
+  }
+
+  return next();
+};
+
+module.exports = { validateGet, validateGetById, validateGetByAddress };

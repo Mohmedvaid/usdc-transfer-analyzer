@@ -2,9 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const transactionController = require("../controllers/transaction.controller");
-const validateGet = require("../validators/transaction");
+const { validateGet, validateGetById } = require("../validators/transaction");
 
 router.get("/", validateGet, transactionController.get);
-router.get("/:id", transactionController.getById);
+router.get("/:id", validateGetById, transactionController.getById);
 
 module.exports = router;

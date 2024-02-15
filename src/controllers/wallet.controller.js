@@ -5,21 +5,16 @@ const CustomError = require("../utils/CustomError");
 
 exports.get = async (req, res, next) => {
   try {
-    // Destructuring with default values for pagination
     let {
       start,
       end,
-      limit = 10,
-      page = 1,
+      limit,
+      page,
       mintransferred: minTransferred,
       maxtransferred: maxTransferred,
       minreceived: minReceived,
       maxreceived: maxReceived,
     } = req.query;
-
-    // Parsing limit and page to ensure they are integers
-    limit = parseInt(limit);
-    page = Math.max(1, parseInt(page)); // Page should be at least 1
 
     // Building the date range filter
     let dateFilter = {};
@@ -28,30 +23,20 @@ exports.get = async (req, res, next) => {
 
     // Building the query object
     let query = {};
-    if (start || end) {
-      query.createdAt = dateFilter;
-    }
+    if (start || end) query.createdAt = dateFilter;
 
     // Adding filters for totalTransferred
     if (minTransferred || maxTransferred) {
       query.totalTransferred = {};
-      if (minTransferred)
-        query.totalTransferred["$gte"] =
-          mongoose.Types.Decimal128.fromString(minTransferred);
-      if (maxTransferred)
-        query.totalTransferred["$lte"] =
-          mongoose.Types.Decimal128.fromString(maxTransferred);
+      if (minTransferred) query.totalTransferred["$gte"] = minTransferred;
+      if (maxTransferred) query.totalTransferred["$lte"] = maxTransferred;
     }
 
     // Adding filters for totalReceived
     if (minReceived || maxReceived) {
       query.totalReceived = {};
-      if (minReceived)
-        query.totalReceived["$gte"] =
-          mongoose.Types.Decimal128.fromString(minReceived);
-      if (maxReceived)
-        query.totalReceived["$lte"] =
-          mongoose.Types.Decimal128.fromString(maxReceived);
+      if (minReceived) query.totalReceived["$gte"] = minReceived;
+      if (maxReceived) query.totalReceived["$lte"] = maxReceived;
     }
 
     // Calculating the number of documents to skip
@@ -59,7 +44,8 @@ exports.get = async (req, res, next) => {
 
     // Fetching wallets and total count
     const [wallets, total] = await Promise.all([
-      Wallet.find(query).skip(skip).limit(limit).select("-transactions"), 
+      Wallet.find(query).skip(skip).limit(limit).select("-transactions"),
+      Wallet.countDocuments(query),
     ]);
 
     // Calculating the number of pages
@@ -81,7 +67,6 @@ exports.get = async (req, res, next) => {
       false
     );
   } catch (error) {
-    // Handling errors
     return next(error);
   }
 };
@@ -96,7 +81,6 @@ exports.getById = async (req, res, next) => {
     // Fetching wallet by id
     const wallet = await Wallet.findById(req.params.id).populate({
       path: "transactions.transactionId",
-      select: "-__v", // Excluding __v field from each populated transaction document
     });
 
     // Sending the response
@@ -108,7 +92,6 @@ exports.getById = async (req, res, next) => {
       false
     );
   } catch (error) {
-    // Handling errors
     return next(error);
   }
 };
@@ -117,7 +100,11 @@ exports.getByAddress = async (req, res, next) => {
   try {
     const { address } = req.params;
     // Fetching wallet by address
-    const wallet = await Wallet.findOne({ address }).populate("transactions");
+    const wallet = await Wallet.findOne({ address })
+      .populate({
+        path: "transactions.transactionId",
+      })
+      .exec();
 
     // Sending the response
     return res.standardResponse(
@@ -128,7 +115,6 @@ exports.getByAddress = async (req, res, next) => {
       false
     );
   } catch (error) {
-    // Handling errors
     return next(error);
   }
 };
