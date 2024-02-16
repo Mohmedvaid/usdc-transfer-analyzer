@@ -7,5 +7,6 @@ const DB_URI = process.env.TEST_DB_URI;
 module.exports = async () => {
   console.log = jest.fn();
   await connect(DB_URI);
-  await seedTransactions();
+  const transactions = await seedTransactions();
+  global.__TEST_DATA__ = { transactions };
 };

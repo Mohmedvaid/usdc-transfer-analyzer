@@ -17,6 +17,7 @@ const seedTransactions = async () => {
       await transactionService.updateWallets(savedTransactions);
 
       console.log(`${transactions.length} transactions seeded successfully.`);
+      return savedTransactions;
     } else {
       console.log("No transactions fetched to seed.");
     }

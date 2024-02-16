@@ -46,7 +46,91 @@ describe("Transaction Controller", () => {
       expect(transactions).toBeInstanceOf(Array);
       expect(transactions).toHaveLength(testItems[0].qty);
     });
+
+    it("should handle invalid date format for start and end", async () => {
+      const response = await request(app).get("/api/transaction").query({
+        start: "invalid-date",
+        end: "invalid-date",
+      });
+      expect(response.statusCode).toBe(400);
+      expect(response.body.error).toBe(true);
+    });
+
+    it("should handle non-numeric min and max values", async () => {
+      const response = await request(app).get("/api/transaction").query({
+        min: "non-numeric",
+        max: "non-numeric",
+      });
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("should handle invalid from and to addresses", async () => {
+      const response = await request(app).get("/api/transaction").query({
+        from: "invalid-address",
+        to: "invalid-address",
+      });
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("should require start date when end date is provided", async () => {
+      const response = await request(app)
+        .get("/api/transaction")
+        .query({ end: new Date().toISOString() });
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("should validate that start date is before end date", async () => {
+      const startDate = new Date();
+      const endDate = new Date(startDate.getTime() - 86400000); // One day before start
+      const response = await request(app).get("/api/transaction").query({
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+      });
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("should handle invalid limit and page values", async () => {
+      const response = await request(app).get("/api/transaction").query({
+        limit: -1,
+        page: 0,
+      });
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("should return an empty array if no transactions match the criteria", async () => {
+      const response = await request(app).get("/api/transaction").query({
+        start: "2020-01-01T00:00:00",
+        end: "2020-01-01T01:00:00",
+      });
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.transactions).toHaveLength(0);
+    });
   });
 
   // Tests for getById function
+  describe("GET /api/transaction/:id", () => {
+    it("should return a single transaction by id", async () => {
+      const testData = global.__TEST_DATA__.transactions[0];
+      const testDataId = testData._id.toString();
+
+      const response = await request(app).get(`/api/transaction/${testDataId}`);
+      const resId = response.body.data._id;
+
+      expect(response.statusCode).toBe(200);
+      expect(resId).toBe(testDataId);
+    });
+
+    it("should return 404 if transaction is not found", async () => {
+      const response = await request(app).get("/api/transaction/invalid-id");
+      expect(response.statusCode).toBe(400);
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toBe(true);
+      expect(response.body.message).toBe("Invalid id");
+    });
+  });
 });
