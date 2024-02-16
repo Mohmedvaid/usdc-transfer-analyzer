@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const {
   validateGet,
   validateGetById,
-} = require("../../src/validators/transaction");
-const CustomError = require("../../src/utils/CustomError");
+} = require("../../../src/validators/transaction");
+const CustomError = require("../../../src/utils/CustomError");
 
 describe("validateGet Validator", () => {
   test("returns next with no arguments if req.query is empty", () => {

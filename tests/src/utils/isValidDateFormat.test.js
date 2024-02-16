@@ -1,4 +1,4 @@
-const isValidDateFormat = require("../../src/utils/isValidDateFormat");
+const isValidDateFormat = require("../../../src/utils/isValidDateFormat");
 
 describe("isValidDateFormat Utility Function", () => {
   test("returns true for a valid date format", () => {

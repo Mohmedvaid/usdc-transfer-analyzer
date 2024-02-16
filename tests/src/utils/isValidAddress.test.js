@@ -1,4 +1,4 @@
-const isValidAddress = require("../../src/utils/isValidAddress"); // Adjust the path as needed
+const isValidAddress = require("../../../src/utils/isValidAddress"); // Adjust the path as needed
 
 describe("isValidAddress Utility Function", () => {
   test("should return true for a valid Ethereum address", () => {

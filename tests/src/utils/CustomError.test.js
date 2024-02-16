@@ -1,4 +1,4 @@
-const CustomError = require("../../src/utils/CustomError");
+const CustomError = require("../../../src/utils/CustomError");
 
 describe("CustomError Class", () => {
   const defaultMessage = "Default Error";

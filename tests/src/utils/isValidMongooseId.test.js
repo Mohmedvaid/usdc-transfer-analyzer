@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const isValidMongooseId = require("../../src/utils/isValidMongooseId");
+const isValidMongooseId = require("../../../src/utils/isValidMongooseId");
 
 describe("isValidMongooseId Utility Function", () => {
   test("returns true for a valid Mongoose ObjectId", () => {

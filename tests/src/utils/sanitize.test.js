@@ -1,4 +1,4 @@
-const sanitize = require("../../src/utils/sanitize");
+const sanitize = require("../../../src/utils/sanitize");
 
 describe("sanitize Utility Function", () => {
   test("should escape regex characters", () => {

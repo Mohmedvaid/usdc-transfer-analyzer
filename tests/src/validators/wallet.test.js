@@ -4,8 +4,8 @@ const {
   validateGet,
   validateGetById,
   validateGetByAddress,
-} = require("../../src/validators/wallet");
-const CustomError = require("../../src/utils/CustomError");
+} = require("../../../src/validators/wallet");
+const CustomError = require("../../../src/utils/CustomError");
 
 describe("validateGet Validator", () => {
   // Helper function to create a request with query parameters
