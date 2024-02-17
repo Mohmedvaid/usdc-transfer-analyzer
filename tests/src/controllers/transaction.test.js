@@ -1,13 +1,19 @@
 const request = require("supertest");
+const mongoose = require("mongoose");
 const app = require("../../../src/app");
+const dbSetup = require("../../setup/jest.setup");
+const tearDown = require("../../setup/jest.teardown");
+
 const testData = require("../../config/testdata.config");
-const dbSetup = require("../../db/jest.setup");
-const tearDown = require("../../db/jest.teardown");
-const testItems = testData.transactions.items;
+const testTransactions = testData.transactions.items;
+let seededTransaction;
+let seededWallets;
 
 describe("Transaction Controller", () => {
   beforeAll(async () => {
-    await dbSetup();
+    const { savedTransactions, savedWallets } = await dbSetup();
+    seededTransaction = savedTransactions;
+    seededWallets = savedWallets;
   });
 
   afterAll(async () => {
@@ -30,8 +36,8 @@ describe("Transaction Controller", () => {
 
     it("should return transactions within a specified date range", async () => {
       // Use dates from test data
-      const startDate = testItems[0].date;
-      const endDate = testItems[0].date;
+      const startDate = testTransactions[0].date;
+      const endDate = testTransactions[0].date;
 
       const response = await request(app).get("/api/transaction").query({
         start: startDate,
@@ -44,7 +50,7 @@ describe("Transaction Controller", () => {
 
       expect(response.statusCode).toBe(200);
       expect(transactions).toBeInstanceOf(Array);
-      expect(transactions).toHaveLength(testItems[0].qty);
+      expect(transactions).toHaveLength(testTransactions[0].qty);
     });
 
     it("should handle invalid date format for start and end", async () => {
@@ -115,14 +121,23 @@ describe("Transaction Controller", () => {
   // Tests for getById function
   describe("GET /api/transaction/:id", () => {
     it("should return a single transaction by id", async () => {
-      const testData = global.__TEST_DATA__.transactions[0];
-      const testDataId = testData._id.toString();
+      const testId = seededTransaction[0]._id.toString();
 
-      const response = await request(app).get(`/api/transaction/${testDataId}`);
+      const response = await request(app).get(`/api/transaction/${testId}`);
       const resId = response.body.data._id;
 
       expect(response.statusCode).toBe(200);
-      expect(resId).toBe(testDataId);
+      expect(resId).toBe(testId);
+    });
+
+    it("should return 404 for a non-existent wallet ID", async () => {
+      const nonExistingId = new mongoose.Types.ObjectId().toString();
+
+      const response = await request(app).get(
+        `/api/transaction/${nonExistingId}`
+      );
+      expect(response.statusCode).toBe(404);
+      expect(response.body.error).toBe(true);
     });
 
     it("should return 404 if transaction is not found", async () => {

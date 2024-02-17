@@ -97,6 +97,8 @@ exports.getById = async (req, res, next) => {
       path: "transactions.transactionId",
     });
 
+    if (!wallet) return next(new CustomError("Wallet not found", 404));
+
     // Sending the response
     return res.standardResponse(
       200,

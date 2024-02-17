@@ -81,6 +81,9 @@ exports.getById = async (req, res, next) => {
 
     const transaction = await Transaction.findById(id);
 
+    if (!transaction)
+      return next(new CustomError("Transaction not found", 404));
+
     // Sending the response
     return res.standardResponse(
       (statusCode = 200),

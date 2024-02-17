@@ -10,7 +10,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 // Local imports
-const { ENV,  } = require("./config/app.config");
+const { ENV } = require("./config/app.config");
 const corsOptions = require("./config/corsOptions.config");
 const rateLimiter = require("./middleware/rateLimiter");
 const credentials = require("./middleware/credentials");

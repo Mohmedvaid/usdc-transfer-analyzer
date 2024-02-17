@@ -2,7 +2,6 @@
 const { getTransactions } = require("../utils/dataGenerator");
 const TransactionService = require("../../src/services/transaction.service");
 
-
 const seedTransactions = async () => {
   try {
     console.log("Seeding transactions...");
@@ -14,10 +13,13 @@ const seedTransactions = async () => {
 
     if (transactions && transactions.length > 0) {
       const savedTransactions = await transactionService.saveTransactions();
-      await transactionService.updateWallets(savedTransactions);
+      console.log(`${savedTransactions.length} transactions saved.`);
+      const savedWallets = await transactionService.updateWallets(
+        savedTransactions
+      );
 
       console.log(`${transactions.length} transactions seeded successfully.`);
-      return savedTransactions;
+      return { savedTransactions, savedWallets };
     } else {
       console.log("No transactions fetched to seed.");
     }

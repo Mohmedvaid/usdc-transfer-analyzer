@@ -7,7 +7,7 @@
     "start": "node src/server.js",
     "start-dev": "nodemon --delay 2 app.js",
     "seed-db": "node src/seeders",
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:coverage": "jest --coverage"
   },
   "author": "",
