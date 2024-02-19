@@ -32,20 +32,23 @@ class TransactionService {
    */
   async updateWallets(transactions) {
     const transactionsToStore = transactions || this.transactions;
+    const wallets = [];
     for (const transaction of transactionsToStore) {
-      await this.updateWallet(
+      const sender = await this.updateWallet(
         transaction.from,
         transaction._id,
         transaction.value,
         "sent"
       );
-      await this.updateWallet(
+      const receiver = await this.updateWallet(
         transaction.to,
         transaction._id,
         transaction.value,
         "received"
       );
+      wallets.push({ sender, receiver });
     }
+    return wallets;
   }
 
   /**
@@ -58,9 +61,7 @@ class TransactionService {
    */
   async updateWallet(address, transactionId, value, type) {
     let wallet = await Wallet.findOne({ address });
-    if (!wallet) {
-      wallet = new Wallet({ address });
-    }
+    if (!wallet) wallet = new Wallet({ address });
 
     if (type === "sent") {
       wallet.totalTransferred = mongoose.Types.Decimal128.fromString(
@@ -78,7 +79,7 @@ class TransactionService {
     }
 
     wallet.transactions.push({ transactionId, type: type });
-    await wallet.save();
+    return wallet.save();
   }
 }
 

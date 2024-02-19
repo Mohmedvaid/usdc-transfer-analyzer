@@ -11,10 +11,7 @@ const { DB_URI: APP_DB_URI } = require("../app.config");
 const connect = async (DB_URI) => {
   let databaseURI = DB_URI || APP_DB_URI;
   try {
-    await mongoose.connect(databaseURI, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    });
+    await mongoose.connect(databaseURI);
   } catch (err) {
     console.error("Database connection error");
     throw err;

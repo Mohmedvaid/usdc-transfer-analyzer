@@ -79,13 +79,16 @@ exports.getById = async (req, res, next) => {
     if (!id || typeof id !== "string" || !isValidMongooseId(id))
       return next(new CustomError("Invalid id", 400));
 
-    const wallet = await Transaction.findById(id);
+    const transaction = await Transaction.findById(id);
+
+    if (!transaction)
+      return next(new CustomError("Transaction not found", 404));
 
     // Sending the response
     return res.standardResponse(
       (statusCode = 200),
       (success = true),
-      (data = wallet),
+      (data = transaction),
       (message = "Transaction retrieved successfully"),
       (error = false)
     );

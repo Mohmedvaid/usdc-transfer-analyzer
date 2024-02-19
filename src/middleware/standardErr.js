@@ -1,6 +1,7 @@
 //  src/middleware/standardErr.js
 const logger = require("../utils/logger");
 const CustomError = require("../utils/CustomError");
+const { ENV } = require("../config/app.config");
 
 /**
  * Global error handler middleware
@@ -12,8 +13,6 @@ const CustomError = require("../utils/CustomError");
  */
 const errorHandler = (err, req, res, next) => {
   // Log the error for server side tracking
-  console.error(err, "\n");
-  logger.error(err.stack);
 
   if (err instanceof CustomError) {
     const code = err.statusCode || 500;
@@ -22,9 +21,15 @@ const errorHandler = (err, req, res, next) => {
       (statusCode = code),
       (success = false),
       (data = null),
-      (message = message),
+      message,
       (error = true)
     );
+  }
+
+  logger.error(err.message);
+  logger.error(err.stack);
+  if (ENV === "DEVELOPMENT") {
+    console.error(err);
   }
 
   return res.standardResponse(

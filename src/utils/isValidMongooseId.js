@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
  */
 const isValidMongooseId = (id) => {
   if (!id) return false;
+  if (typeof id !== "string") return false;
   return mongoose.Types.ObjectId.isValid(id);
 };
 

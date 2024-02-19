@@ -10,7 +10,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 // Local imports
-const { ENV, PORT } = require("./config/app.config");
+const { ENV } = require("./config/app.config");
 const corsOptions = require("./config/corsOptions.config");
 const rateLimiter = require("./middleware/rateLimiter");
 const credentials = require("./middleware/credentials");
@@ -22,13 +22,15 @@ const updateTransactions = require("./task/storeTransactions");
 
 const app = express();
 
-// Connect to the database
-connect()
-  .then(() => console.log("Database connected"))
-  .catch((err) => {
-    console.error("Database connection error", err);
-    process.exit(1);
-  });
+if (ENV !== "TEST") {
+  // Connect to the database
+  connect()
+    .then(() => console.log("Database connected"))
+    .catch((err) => {
+      console.error("Database connection error", err);
+      process.exit(1);
+    });
+}
 
 // Rate limiting
 app.use(rateLimiter);
@@ -41,7 +43,7 @@ app.use(credentials);
 app.use(cors(corsOptions));
 
 if (ENV === "DEVELOPMENT") app.use(morgan("dev"));
-else app.use(morgan("combined"));
+if (ENV === "PRODUCTION") app.use(morgan("combined"));
 
 // Parse incoming requests with JSON payloads
 app.use(express.json());
@@ -55,24 +57,21 @@ app.use("/api", routes);
 // Global error handler
 app.use(standardError);
 
-// Start the server
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
-
 // 404 route handler
 app.all("*", (req, res) => res.status(404).json({ message: "Not Found" }));
 
-// Update transactions task to run on server start
-updateTransactions();
-
-// fetch new transactions every 5 minutes
-const fiveMinutes = 300000;
-// const thirtySeconds = 30000;
-setInterval(() => {
-  console.log("\n-------- Running task to update transactions --------");
+if (ENV === "PRODUCTION") {
+  // Update transactions task to run on server start
   updateTransactions();
-}, fiveMinutes);
+
+  // fetch new transactions every 5 minutes
+  const fiveMinutes = 300000;
+  // const thirtySeconds = 30000;
+  setInterval(() => {
+    console.log("\n-------- Running task to update transactions --------");
+    updateTransactions();
+  }, fiveMinutes);
+}
 
 // Graceful shutdown
 process.on("SIGINT", async () => {
@@ -89,3 +88,5 @@ process.on("SIGINT", async () => {
 
   process.exit(0);
 });
+
+module.exports = app;

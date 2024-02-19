@@ -70,9 +70,10 @@ const storeTransactions = async () => {
     taskTracker.status = "success";
     taskTracker.totalTransactionsAdded = totalAdded;
   } catch (error) {
-    // console.error("Error storing transactions:", error);
+    console.error("Error storing transactions:", error);
     taskTracker.status = "fail";
     taskTracker.errorInfo = error.message;
+    throw error;
   } finally {
     taskTracker.endTime = new Date();
     await taskTracker.save();
